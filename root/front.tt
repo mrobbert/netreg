@@ -1,0 +1,56 @@
+<img src="/static/images/netreg.jpg">
+<table width=620><tr><td>
+<table width=100%><tr><td>
+<font size=+2><B>Welcome to the Network Registration System</b></font></td>
+<td align=right><i><font size=-1>Release 1.1.9</font></i>
+</td></tr></table>
+<hr>
+<font face="Arial,Helvetica,Geneva,Charter">
+<center>
+<table border=1 bgcolor=black><tr><td bgcolor=#ffff00>
+<font size=+1>
+<center>
+If you are here to register a computer, you must follow the instructions on the <a href="http://www.cmu.edu/computing/firstconnect">FirstConnect</a> website. <a href="http://www.cmu.edu/computing/firstconnect">FirstConnect</a> will help you secure your computer and avoid loss of network access.</a>
+ 
+</center></font></td></tr></table>
+</center>
+
+<p>
+Users with Carnegie Mellon Andrew IDs can use this system to register machines to be connected to the campus network and activate network outlets.<br>
+<br>All machines
+must be registered through this system prior to use on the campus network.
+<a target=_blank href="/help/pages/about-netreg.shtml">About Network Registration</a>.
+
+<br><br>
+
+<table>
+
+<tr><td bgcolor=lightgreen colspan=2><b><font face="Arial,Helvetica,Geneva,Charter">What You'll Need</font></b></td></tr>
+
+<tr>
+<td valign=top colspan=2><font face="Arial,Helvetica,Geneva,Charter" size=-1>
+To use this system, you will need to have the 
+<a target=export href="http://www.cmu.edu/certificates">CMU Root Certificates</a> installed in your browser. Your browser must also have Javascript and Cookies enabled.
+<br><br>
+</td></tr>
+
+<tr valign=top>
+<td colspan=2 bgcolor=red><b><font face="Arial,Helvetica,Geneva,Charter">Important</font></b></td></tr>
+<td colspan=2 valign=top><font face="Arial,Helvetica,Geneva,Charter" size=-1>By using this system, you agree to abide by the 
+policies and guidelines concerning the use of computer, 
+network, and telecommunications resources. These policies and guidelines govern the use of such resources. Please read the 
+<A target=_blank HREF="http://www.cmu.edu/computing/documentation/index_policies.html">Carnegie Mellon Computing Policies and Guidelines</A>.
+
+<br><br>If you <a href="http://www.cmu.edu/computing/documentation/index_policies.html">do not agree to abide by these guidelines</a>, you may not use this system.
+
+<br><br>
+By clicking "Enter", you indicate that you have read, understand, and agree to the policies and guidelines.<br><br>
+<center><a href="https://basalt/bin/netreg.pl?op=login"><img border=0 alt="Enter NetReg" src=/static/images/enter.gif></a></center>
+
+</td></tr>
+
+</table>
+<hr>
+<i><font size=-1>Carnegie Mellon Network Development -- 
+<a href="mailto:advisor@andrew.cmu.edu">Webmaster</a></font></i>
+</td></tr></table>
