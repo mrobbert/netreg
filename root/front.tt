@@ -1,8 +1,7 @@
-<img src="/static/images/netreg.jpg">
 <table width=620><tr><td>
 <table width=100%><tr><td>
-<font size=+2><B>Welcome to the Network Registration System</b></font></td>
-<td align=right><i><font size=-1>Release [% version -%] </font></i>
+<font size=+2><B>Welcome to the [% c.SYSTEM_NAME %]</b></font></td>
+<td align=right><i><font size=-1>Release [% c.VERSION -%] </font></i>
 </td></tr></table>
 <hr>
 <font face="Arial,Helvetica,Geneva,Charter">
@@ -45,12 +44,10 @@ network, and telecommunications resources. These policies and guidelines govern 
 
 <br><br>
 By clicking "Enter", you indicate that you have read, understand, and agree to the policies and guidelines.<br><br>
-<center><a href="/login"><img border=0 alt="Enter NetReg" src=/static/images/enter.gif></a></center>
+<center><a href="/mach_list"><img border=0 alt="Enter NetReg" src=/static/images/enter.gif></a></center>
 
 </td></tr>
 
 </table>
 <hr>
-<i><font size=-1>Carnegie Mellon Network Development -- 
-<a href="mailto:advisor@andrew.cmu.edu">Webmaster</a></font></i>
 </td></tr></table>
