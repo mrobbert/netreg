@@ -1,0 +1,116 @@
+package netreg::Schema::Result::SubnetRegistrationMode;
+
+# Created by DBIx::Class::Schema::Loader
+# DO NOT MODIFY THE FIRST PART OF THIS FILE
+
+use strict;
+use warnings;
+
+use base 'DBIx::Class::Core';
+
+__PACKAGE__->load_components("InflateColumn::DateTime");
+
+=head1 NAME
+
+netreg::Schema::Result::SubnetRegistrationMode
+
+=cut
+
+__PACKAGE__->table("subnet_registration_modes");
+
+=head1 ACCESSORS
+
+=head2 id
+
+  data_type: 'integer'
+  extra: {unsigned => 1}
+  is_auto_increment: 1
+  is_nullable: 0
+
+=head2 version
+
+  data_type: 'timestamp'
+  default_value: current_timestamp
+  is_nullable: 0
+
+=head2 subnet
+
+  data_type: 'integer'
+  default_value: 0
+  is_nullable: 0
+
+=head2 mode
+
+  data_type: 'enum'
+  default_value: 'static'
+  extra: {list => ["static","dynamic","reserved","broadcast","pool","base","secondary"]}
+  is_nullable: 0
+
+=head2 mac_address
+
+  data_type: 'enum'
+  default_value: 'required'
+  extra: {list => ["required","none"]}
+  is_nullable: 0
+
+=head2 quota
+
+  data_type: 'integer'
+  extra: {unsigned => 1}
+  is_nullable: 1
+
+=cut
+
+__PACKAGE__->add_columns(
+  "id",
+  {
+    data_type => "integer",
+    extra => { unsigned => 1 },
+    is_auto_increment => 1,
+    is_nullable => 0,
+  },
+  "version",
+  {
+    data_type     => "timestamp",
+    default_value => \"current_timestamp",
+    is_nullable   => 0,
+  },
+  "subnet",
+  { data_type => "integer", default_value => 0, is_nullable => 0 },
+  "mode",
+  {
+    data_type => "enum",
+    default_value => "static",
+    extra => {
+      list => [
+        "static",
+        "dynamic",
+        "reserved",
+        "broadcast",
+        "pool",
+        "base",
+        "secondary",
+      ],
+    },
+    is_nullable => 0,
+  },
+  "mac_address",
+  {
+    data_type => "enum",
+    default_value => "required",
+    extra => { list => ["required", "none"] },
+    is_nullable => 0,
+  },
+  "quota",
+  { data_type => "integer", extra => { unsigned => 1 }, is_nullable => 1 },
+);
+__PACKAGE__->set_primary_key("id");
+__PACKAGE__->add_unique_constraint("subnet", ["subnet", "mode", "mac_address", "quota"]);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07000 @ 2012-01-06 16:24:26
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:VdB1tcHa4Hc3Nos808aXPw
+
+
+# You can replace this text with custom content, and it will be preserved on regeneration
+1;

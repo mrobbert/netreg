@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" [%#
+    %]"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>[% template.title or c.name %]</title>
+<link rel="stylesheet" href="[% c.uri_for('/static/css/main.css') %]" />
+</head>
+ 
+<body>
+<div id="outer">
+<div id="header">
+    <img src="[% c.uri_for('/static/images/netreg.jpg') %]" />
+    <h1>[% template.title or site.title %]</h1>
+</div>
+ 
+<div id="bodyblock">
+<div id="content">
+    [%# Status and error messages %]
+    <span class="message">[% status_msg %]</span>
+    <span class="error">[% error_msg %]</span>
+    [% content %]
+</div><!-- end content -->
+</div><!-- end bodyblock -->
+ 
+<div id="footer">
+[% c.ADMIN_GROUP %] <a href="mailto:[% c.USER_MAIL %]">Webmaster</a>
+</div><!-- end footer -->
+</div><!-- end outer -->
+ 
+</body>
+</html>
+

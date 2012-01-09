@@ -1,0 +1,139 @@
+name netreg
+
+<Module::connect_info>
+    <default>
+        dsn 'dbi:mysql:netdb'
+        user 'root'
+        password 'mypassword'
+    </default>
+</Module::connect_info>
+
+############################ Web Settings #############################
+# --LOGOUT_URL This is presented to the user on the logout screen as a link
+# to follow to complete logging out (of a campus-wide web auth system, for
+# example). Blank will supress logout text from being displayed.
+LOGOUT_URL = "https://webiso.andrew.cmu.edu/logout.cgi"
+
+# --LOGOUT_TEXT This text is presented with LOGOUT_URL upon logout
+LOGOUT_TEXT = "<b><font size=+1>Notice:</font></b> If you are done using authenticated web services, you should visit the <a href=\"$LOGOUT_URL\">WebISO Logout</a> page. Your browser may automatically refresh to this page in one minute."
+
+############################ User Settings ############################
+# --SuperUsers The SuperUsers will always be granted access to the system,
+# even if the DB_OFFLINE key is set in the _sys_info table. Additionally,
+# SuperUsers are the only ones allowed to assume another identity for
+# purposes of interacting with the system (useful for testing, etc.)
+SuperUsers = fk03 kevinm rjy vitroth ktrivedi
+
+# --LocalRealm The REMOTE_USER environment variable will be fetched to 
+# determine the users identity. In some environments, the REMOTE_USER
+# variable is set to user@REALM, so the realm here is stripped in
+# getUserInfo (and thus in the DB). Users that do NOT match the LocalRealm
+# will not have the realm information stripped, so they would need
+# a "user@realm" entry in the users table for access.
+# Set this to '' if there is no REALM in use.
+LocalRealm = ANDREW.CMU.EDU
+
+########################### Paging Criteria ###########################
+# --DEF_ITEMS_PER_PAGE On most screens NetReg will try to paginate the 
+# displays - ie show you only a subset of the entire dataset (limited to 
+# some number of rows). You can control the parameters of that paging here.
+# DEF_ITEMS_PER_PAGE is the default number of items per page to display.
+DEF_ITEMS_PER_PAGE = 40
+
+# --DEF_MAX_PAGES We provide direct links to a number of the pages, 
+# while any that exceed this number you can get to only by visiting a 
+# page closer in sequence to the target page
+DEF_MAX_PAGES = 15
+
+# --MACHINES_PER_PAGE We limit the display of machines on the main 
+# screen of NetReg, since there are also outlets on the page (if you
+# enable the cable/outlet features. Both machines and outlets on the
+# main page are limited to this number.
+MACHINES_PER_PAGE = 20
+
+####################### NetReg Text Considerations ####################
+# These variables affect the text that is presented to users at
+# various locations. 
+#
+
+# --USER_MAIL This is the email address that users should send email if they
+# have questions, etc. -- You probably don't want this to be the
+# same email address that the system will send error reports 
+USER_MAIL = advisor@andrew.cmu.edu
+
+# --SYSTEM_NAME This should be the (friendly) name of your system.
+SYSTEM_NAME = Network Registration System
+
+# --SYSTEM_MAIN_URL The main URL for your system, as you would want 
+# users to see
+SYSTEM_MAIN_URL = http://netreg.net.cmu.edu
+
+# --ADMIN_GROUP Administrative group - To identify the group responsible for 
+# running the system
+ADMIN_GROUP = Carnegie Mellon Network Development
+
+# --ENABLE_CABLES_OUTLETS If you want to use the cable/outlet interface, 
+# set this to '1'. '0' is recommended unless you are interested in 
+# development/have read the manual
+ENABLE_CABLES_OUTLETS = 1
+
+# --ENABLE_BUILDINGS If you want to have the buildings section 
+# (allowing users to find a subnet by building), set this to '1'.
+ENABLE_BUILDINGS = 1
+
+# --ENABLE_NETWORKS If you want to have 'networks' (just friendly names 
+# for subnets) set this to '1'.
+ENABLE_NETWORKS = 1
+
+# --ENABLE_TRUNK_SET If you want to have 'trunk_set' (combining vlans
+# in trunk-set and having multiple trunk-set/bldg) set this to '1'.
+ENABLE_TRUNK_SET = 1
+
+# --ENABLE_DEPT_CONTROL If you want to have the "Department Control" 
+# section (allow members of dept: groups some control over zone and 
+# subnet permissions, set this to '1'.
+ENABLE_DEPT_CONTROL = 1
+
+# --DNS_CONFIG_OLD_METHOD If you are not yet using the service group 
+# DNS configuration method, set this to '1'. New NetReg users should
+# leave this value as '0'.
+DNS_CONFIG_OLD_METHOD = 0
+
+#
+#
+PORTADMIN_LOGIN_TELNET_PASSWD = "/home/netreg/etc/.sw_login_telnet_passwd"
+
+#
+#
+PORTADMIN_ENABLE_TELNET_PASSWD = "/home/netreg/etc/.sw_enable_telnet_passwd"
+
+#
+#
+PORTADMIN_LOGIN_SSH_PASSWD = "/home/netreg/etc/.sw_login_ssh_passwd"
+
+#
+#
+PORTADMIN_ENABLE_SSH_PASSWD = "/home/netreg/etc/.sw_enable_ssh_passwd"
+
+#################### QuickReg Configuration ###########################
+# This affects the QuickRegistration feature.
+
+# --ENABLE_QUICKREG QuickReg is a feature of NetReg that enables users
+# to connect to the network, get a non-global IP address, and be directed
+# into the registration system. The system detects that they are coming
+# from this special "registration" IP space, finds their MAC address,
+# and makes the registration process extremely simple.
+ENABLE_QUICKREG = 0
+
+# --QUICKREG_METHOD can be either 'no_regs' or 'machine_unreg'. If 
+# no_regs, users get passed to the quickreg machine registration if
+# they have NO machine registrations whatsoever. In 'machine_unreg', 
+# they are passed if the machine they're connecting from is 
+# unregistered. (In both cases they need to be on a subnet with the
+# prereg_subnet flag defined.)
+QUICKREG_METHOD = machine_unreg
+
+# --HAVE_OMAPI_MODULE If you have the OMAPI::DHCP modules, set this
+# to '1'. For now the modules can be obtained from
+# http://www.net.cmu.edu/netreg/omapi.tar.gz
+HAVE_OMAPI_MODULE = 0
