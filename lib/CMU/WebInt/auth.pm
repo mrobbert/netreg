@@ -37,7 +37,7 @@ use CMU::Netdb::UserMaint;
 use CGI;
 use DBI;
 {
-  no strict;
+#  no strict;
   $VERSION = '0.03';
 }
 
@@ -217,7 +217,8 @@ sub auth_add_user_form {
   my $al = CMU::Netdb::get_add_level($dbh, $user, 'users', 0);
   print CMU::WebInt::stdhdr($q, $dbh, $user, "Add User", $errors);
   &CMU::WebInt::title("Add User");
-  my $msg = $$errors{msg} if (ref $errors && defined $$errors{msg});
+  my $msg;
+  $msg = $$errors{msg} if (ref $errors && defined $$errors{msg});
   
   if ($al < 1) {
     print "<br>";

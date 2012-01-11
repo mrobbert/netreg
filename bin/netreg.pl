@@ -40,6 +40,7 @@
 ## $Id: netreg.pl,v 1.18 2008/03/27 22:57:47 vitroth Exp $
 ##
 use strict;
+use warnings;
 
 use lib '/home/netreg/lib';
 
@@ -52,7 +53,7 @@ use CGI;
 my $debug = 0;
 
 # running under FCGI
-if (eval "require FCGI") {  
+if (eval {require FCGI}) {  
   # Well known FastCGI bug workaround
   my $ignore;
   while (($ignore) = each %ENV) {
@@ -61,16 +62,15 @@ if (eval "require FCGI") {
   my $req = FCGI::Request();
   my $is_fcgi = $req->IsFastCGI();
   if ($is_fcgi) { 
-    warn "FastCGI? yes." if ($debug >= 2);
+    carp "FastCGI? yes." if ($debug >= 2);
 
     while ($req->Accept() >= 0) {
-      eval {
-	CGI->_reset_globals();
-	my $q = new CGI;
+	#CGI->_reset_globals();
+	my $q = CGI->new;
 	my $authuser = $q->cookie('authuser');
 	$ENV{'authuser'} = $authuser;
       
-	#  warn Data::Dumper->Dump([\%ENV, $authuser], ['ENV', 'authuser']);
+	#  carp Data::Dumper->Dump([\%ENV, $authuser], ['ENV', 'authuser']);
 
 	my $op = $q->param('op');
 	CMU::Netdb::primitives::clear_changelog("WebInt:$ENV{REMOTE_ADDR}");
@@ -82,12 +82,11 @@ if (eval "require FCGI") {
 	} else {
 	  $CMU::WebInt::vars::opcodes{$op}->($q);
 	}
-      }
     }
     exit;
 
   } else {
-    warn "FastCGI? no." if ($debug >= 2);
+    carp "FastCGI? no." if ($debug >= 2);
     # Fall through to non-FCGI case
   }
 } 
