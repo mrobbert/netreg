@@ -26,21 +26,22 @@
 
 
 package CMU::Netdb::validity;
-use strict;
+#use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $INVALID $debug);
 
 use CMU::Netdb;
 use CMU::Netdb::errors;
 use CMU::Netdb::helper;
 use Data::Dumper;
+use Carp;
 
 require Exporter;
 @ISA = qw(Exporter);
 
 @EXPORT = qw(valid getError verify_limit verify_orderby);
 
-$INVALID = chr(001);
-$debug = 0;
+$INVALID = chr(1);
+$debug = 1;
 
 my %validmap = ('building.name' => \&verify_bstring_64,
 		'building.abbreviation' => \&verify_bstring_16,
@@ -272,32 +273,32 @@ sub valid {
 
   my $Ret;
   if (defined $validmap{$field}) {
-    warn __FILE__, ':', __LINE__, ' :>'.
+    carp __FILE__, ':', __LINE__, ' :>'.
       "Calling field specific validation routine for $field: '$value'\n" if ($debug >= 3);
     $Ret = $validmap{$field}->(CMU::Netdb::cleanse($value), $user, $ul, $dbh);
     if (substr($Ret, 0, 1) eq $INVALID) {
       $value = 'undef' unless (defined $value);
-      warn __FILE__, ':', __LINE__, ' :>'.
+      carp __FILE__, ':', __LINE__, ' :>'.
 	"Validation of $field ($value) failed: ".substr($Ret, 1);
     }
     return $Ret;
   }elsif($field =~ /\.id$/s) {
-    warn __FILE__, ':', __LINE__, ' :>'.
+    carp __FILE__, ':', __LINE__, ' :>'.
       "Calling validation routine for id\n" if ($debug >= 3);
     $Ret = verify_integer_err_default(CMU::Netdb::cleanse($value), $user,
 				      $ul, $dbh);
     if (substr($Ret, 0, 1) eq $INVALID) {
       $value = 'undef' unless (defined $value);
-      warn __FILE__, ':', __LINE__, ' :>'.
+      carp __FILE__, ':', __LINE__, ' :>'.
 	"Validation of $field ($value) failed: ".substr($Ret, 1) if $debug;
     }
     return $Ret;
   }elsif($field =~ /\.version$/s){
-    warn __FILE__, ':', __LINE__, ' :>'.
+    carp __FILE__, ':', __LINE__, ' :>'.
       "Calling validation routine for version\n" if ($debug >= 3);
     return verify_timestamp(CMU::Netdb::cleanse($value), $user, $ul, $dbh);
   }else{
-    warn __FILE__, ':', __LINE__, ' :>'.
+    carp __FILE__, ':', __LINE__, ' :>'.
       "No validity routine for '$field'; just cleansing data\n" if ($debug);
     return CMU::Netdb::cleanse($value);
   }
@@ -308,7 +309,7 @@ sub valid {
 sub getError {
   my ($in) = @_;
   if (substr($in, 0, 1) eq $INVALID) {
-    warn __FILE__, ':', __LINE__, ' :>'.
+    carp __FILE__, ':', __LINE__, ' :>'.
       "CMU::Netdb::getError: Returning ".substr($in, 1) if ($debug >= 1);
     return substr($in, 1);
   }
@@ -484,7 +485,7 @@ sub verify_integer_blank_default {
 
 sub verify_integer_undef_default {
   my ($in) = @_;
-  return undef if (!defined $in || $in eq '');
+  return if (!defined $in || $in eq '');
   return "$INVALID$errcodes{ENONUM}" unless ($in =~ /^\d+$/s);
   return $in;
 }
@@ -543,7 +544,7 @@ sub verify_hostname_zone_lookup {
 
   return "$INVALID$errcodes{EPERM}" if (lc($host) eq 'localhost' && $ul < 9);
   
-  warn __FILE__, ':', __LINE__, ' :>'.
+  carp __FILE__, ':', __LINE__, ' :>'.
     "verify_hostname_zone_lookup:: host: $host, domain: $domain, userlevel: $ul\n" if ($debug >= 2);
   
   return $in if ($in eq '.' && $ul >= 9);
@@ -650,7 +651,7 @@ sub verify_hostname {
     if ($in =~ /\.IN\-ADDR\.ARPA$/is);
   
   my ($host, $domain) = CMU::Netdb::splitHostname($in);
-  warn __FILE__, ':', __LINE__, ' :>'.
+  carp __FILE__, ':', __LINE__, ' :>'.
     "verify_hostname: $in, $host, $domain, userlevel $ul\n" if ($debug >= 2);
   return "$INVALID$errcodes{ETOOSHORT}" if (length($host) < 2 && $ul < 9);
   return "$INVALID$errcodes{ETOOLONG}" if (length($in) > 255);
@@ -697,7 +698,7 @@ sub verify_hostname_und_allow {
   return $in if ($in eq '.' && $ul >= 9);
 
   my ($host, $domain) = CMU::Netdb::splitHostname($in);
-  warn __FILE__, ':', __LINE__, ' :>'.
+  carp __FILE__, ':', __LINE__, ' :>'.
     "verify_hostname: $in, $host, $domain, userlevel $ul\n" if ($debug >= 2);
   return "$INVALID$errcodes{ETOOSHORT}" if (length($host) < 2 && $ul < 9);
   return "$INVALID$errcodes{ETOOLONG}" if (length($in) > 255);
@@ -737,7 +738,7 @@ sub verify_hostname_und_allow {
 sub verify_hostname_arpa {
   my ($in, $user, $ul, $dbh) = @_;
   
-  warn __FILE__, ':', __LINE__, ' :>'.
+  carp __FILE__, ':', __LINE__, ' :>'.
     "verify_hostname_arpa: $in\n" if ($debug >= 2);
   return "$INVALID$errcodes{ETOOSHORT}" if (length($in) < 14);
   return "$INVALID$errcodes{ETOOLONG}" if (length($in) > 255);
@@ -766,7 +767,7 @@ sub verify_ip_null_ok {
   my ($in) = @_;
   
   return $in if ($in eq '');
-  warn __FILE__, ':', __LINE__, ' :>'.
+  carp __FILE__, ':', __LINE__, ' :>'.
     "verify_ip: $in\n" if ($debug >= 2);
   return "$INVALID$errcodes{EDATA}" unless ($in =~ /^\d+\.\d+\.\d+\.\d+$/s);
   my @b = split(/\./, $in);
@@ -852,7 +853,7 @@ sub verify_groups_flags {
 sub verify_machine_flags {
   my ($in) = @_;
   my @inflags = split(/\,/, $in);
-  warn __FILE__, ':', __LINE__, ' :>'.
+  carp __FILE__, ':', __LINE__, ' :>'.
     "inflags: ".join(',', @inflags)." ; machine flags: ".
       join(',', @CMU::Netdb::structure::machine_flags) if ($debug > 5);
   return verify_set(\@inflags, \@CMU::Netdb::structure::machine_flags);
@@ -976,7 +977,7 @@ sub verify_dhcp_option_value {
 sub verify_dhcp_ov_recurse {
   my ($rTokens, $rData, $Pos, $rContinue) = @_;
  
-  warn __FILE__ . __LINE__ . Data::Dumper->Dump([$rTokens, $rData, $Pos, $rContinue], ['rTokens', 'rdata', 'Pos', 'rContinue']) if ($debug >= 2);
+  carp __FILE__ . __LINE__ . Data::Dumper->Dump([$rTokens, $rData, $Pos, $rContinue], ['rTokens', 'rdata', 'Pos', 'rContinue']) if ($debug >= 2);
   # Special case: empty lines with type RAW are okay
   return 1
     if ($#$rTokens == 0 && $rTokens->[0] eq 'RAW' && $#$rData == -1);
@@ -1067,10 +1068,10 @@ sub verify_dhcp_ov_recurse {
       my @Tok = @$rTokens;
       while(1) {
         my @SendTok = @Tok;
-	warn "Verifying token $SendTok[0]/$rData->[0]\n\n" if ($debug);
+	carp "Verifying token $SendTok[0]/$rData->[0]\n\n" if ($debug);
         my $Res = verify_dhcp_ov_recurse(\@SendTok, $rData, 1, [11]);
         return $Res if ($Res < 1);
-	warn "Token OK\n" if ($debug);
+	carp "Token OK\n" if ($debug);
         # Successful verification of array element. Check for a comma.
         # No comma == continue
         if ($#$rData != -1 && $rData->[0] eq ',') {
@@ -1206,10 +1207,11 @@ sub verify_table_name {
 sub verify_table_field {
   my ($in) = @_;
 
+  $DB::single=2;
   my ($table, $col) = split(/\./, $in, 2);
   my $Ret = verify_table_name($table);
   if (getError($Ret) != 1) {
-    warn __FILE__, ':', __LINE__, ' :>'.
+    carp __FILE__, ':', __LINE__, ' :>'.
       "verify_table_field returning ESETMEM: $table did not validate"
 	if ($debug >= 1);
     return $Ret;
@@ -1222,7 +1224,7 @@ sub verify_table_field {
   my @SFields;
   eval '@SFields = @'.$TArray.';';
   return $in if (grep(/^$table.$col$/, @SFields));
-  warn __FILE__, ':', __LINE__, ' :>'.
+  carp __FILE__, ':', __LINE__, ' :>'.
     "verify_table_field returning ESETMEM: $table/$col (from $in) ".
       "did not validate" if ($debug >= 1);
   return "$INVALID$errcodes{ESETMEM}";
@@ -1246,7 +1248,7 @@ TVERIFY:
       my $CT = shift(@Tok);
       next if ($CT eq '');
 
-      warn __FILE__, ':', __LINE__, ' :>'.
+      carp __FILE__, ':', __LINE__, ' :>'.
 	"Processing $CT (loc $Loc)" if ($debug >= 2);
 
       # Quote handling
@@ -1300,7 +1302,7 @@ TVERIFY:
 	}elsif($CT =~ /^(\S+\.\S+)$/) {
 	  my $Ret = verify_table_field($CT);
 	  if (getError($Ret) != 1) {
-	    warn __FILE__, ':', __LINE__, ' :>'.
+	    carp __FILE__, ':', __LINE__, ' :>'.
 	      "verify_table_name_mult error in table verification ($CT): $Ret";
 	    return $Ret;
 	  }
@@ -1324,7 +1326,7 @@ TVERIFY:
 	}elsif($CT =~ /^(\S+\.\S+)$/) {
 	  my $Ret = verify_table_field($CT);
 	  if (getError($Ret) != 1) {
-	    warn __FILE__, ':', __LINE__, ' :>'.
+	    carp __FILE__, ':', __LINE__, ' :>'.
 	      "verify_table_name_mult error in table verification ($CT): $Ret";
 	    return $Ret;
 	  }
@@ -1342,20 +1344,20 @@ TVERIFY:
 	}elsif(uc($CT) eq 'LEFT') {
 	  $Loc = 1;
 	}else{
-	  warn __FILE__,  ':', __LINE__, ' :>'.
+	  carp __FILE__,  ':', __LINE__, ' :>'.
 	    "verify_table_name_mult token after success ($CT)";
 	  $Loc = 908;
 	}
 	next;
       }elsif($Loc > 900) {
 	## Error conditions
-	warn __FILE__,  ':', __LINE__, ' :>'.
+	carp __FILE__,  ':', __LINE__, ' :>'.
 	  "verify_table_name_mult error in JOIN parsing ($Loc)";
 	return "$INVALID$errcodes{EINVCHAR}";
       }
     }
     unless ($Loc > 100 && $Loc < 200) {
-      warn __FILE__,  ':', __LINE__, ' :>'.
+      carp __FILE__,  ':', __LINE__, ' :>'.
 	"verify_table_name_mult out of tokens in JOIN parsing ($Loc)";
       return "$INVALID$errcodes{EINVCHAR}";
     }
@@ -1585,7 +1587,7 @@ sub verify_soa_email {
 
 sub verify_alloc_method {
   my @A = keys %CMU::Netdb::structure::AllocationMethods;
-  warn __FILE__, ':', __LINE__, ' :>'.
+  carp __FILE__, ':', __LINE__, ' :>'.
     "AM: $_[0]\n" if ($debug >= 2);
   return verify_enum($_[0], \@A);
 }
